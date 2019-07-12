@@ -1,0 +1,50 @@
+﻿@model ParentEspoir.Application.CreateWorkshopTypeCommand
+
+@{
+    ViewData["Title"] = "Créer un volet";
+}
+
+@if (ViewBag.OperationSuccess != null && ViewBag.OperationSuccess)
+{
+    <div class="alert alert-success">
+        Le volet a bien été <strong>ajouté</strong>.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div class="jumbotron">
+    <div class="container">
+        <h4>@ViewData["Title"]</h4>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label">Nom</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Code" class="control-label">Code du ministère</label>
+                        <input asp-for="Code" class="form-control" />
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Créer" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div>
+            <a asp-action="Index">Retour à la liste</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/clearform.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

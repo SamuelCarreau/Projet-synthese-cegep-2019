@@ -1,0 +1,98 @@
+﻿@{
+    ViewData["Title"] = "Options système";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+
+<div id="appProfilOption">
+
+    <div v-if="isLoading" class="loading text-primary container">
+        <h1 class="display-3">Chargement</h1>
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <div id="accordion">
+        <div id="mainDiv" style="display:none;">
+            <div class="card mb-1" v-for="(optionList, name) in collections.options">
+                <div :id="'heading' + name" class="card-header collapsed" data-toggle="collapse" :data-target="'#collapse' + name" :aria-controls="'collapse' + name" aria-expanded="false" style="cursor: pointer;">
+                    <h3>{{ toFrench(name) }}</h3>
+                </div>
+                <div :id="'collapse' + name" class="collapse" :aria-labelledby="'heading' + name" data-parent="#accordion">
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <div class="input-group">
+                                    <input :id="'add' + name" class="form-control" :placeholder="'Ajouter ' + toFrench(name)" />
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" v-on:click="create(name)">
+                                            Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                                <div :id="'addError' + name" class="alert alert-danger" style="display:none;">
+                                    <button type="button" class="close" v-on:click="close('addError' + name)">
+                                        &times;
+                                    </button>
+                                    <span></span>
+                                </div>
+                            </li>
+                            <li class="list-group-item" v-for="item in optionList">
+                                <div class="input-group">
+                                    <p :id="name + item.id" class="form-control">{{ item.name }}</p>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary px-4" data-toggle="modal" data-target="#editOption" v-on:click="onEditClick(name, item.id)">Modifier</button>
+                                        <button type="button" class="btn btn-danger ml-1" v-on:click="deactivate(name, item.id)">Désactivé</button>
+                                    </div>
+                                </div>
+                                <div :id="'error' + name + item.id" class="alert alert-danger" style="display:none;">
+                                    <button type="button" class="close" v-on:click="close('error' + name + item.id)">
+                                        &times;
+                                    </button>
+                                    <span></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="editOption" class="modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>Modifier</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label>Nom : </label>
+                        <input id="editId" :value="editId" hidden />
+                        <input id="entityType" :value="entityType" hidden />
+                        <input id="entityName" :value="entityName" class="form-control" />
+                        <div id="editModalError" style="display:none;">
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" v-on:click="edit(entityType, editId)">Modifier</button>
+                        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Annulé</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Styles  {
+    <link rel="stylesheet" href="~/css/ProfilOption/ProfilOption.css" />
+}
+
+@section Scripts  {
+    <script src="~/js/ProfilOptions/SelectAllProfileOptions.js"></script>
+}

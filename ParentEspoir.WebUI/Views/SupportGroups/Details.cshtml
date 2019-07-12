@@ -1,0 +1,133 @@
+﻿@model ParentEspoir.Domain.Entities.SupportGroup
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+@if (ViewBag.DeleteFailed != null && ViewBag.DeleteFailed)
+{
+<div id="deleteFailed" class="alerte alert-danger">
+    La <strong>désactivation</strong> n'a pas fonctionné
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+}
+
+<div class="jumbotron">
+    <h4>Détail du groupe de soutien</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Adresse
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt class="col-sm-2">
+            Superviseur
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.User == null)
+            {
+                <span>Aucun</span>
+            }
+            else if (string.IsNullOrWhiteSpace(Model.User.Name))
+            {
+                <span>@Model.User.UserName</span>
+            }
+            else
+            {
+                <span>@Model.User.Name</span>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+
+    <div>
+        <h3>Clients</h3>
+        @if (Model.Customers.Count == 0)
+        {
+            <p>Il n'y a aucun client dans ce groupe de soutien</p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Prénom
+                        </th>
+                        <th>
+                            Nom
+                        </th>
+                        <th>
+                            Téléphone
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Customers)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Phone)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.SupportGroupId">Modifier</a>
+        <a class="btn btn-outline-primary" asp-action="Index">Retour à la liste</a>
+        @if (User.IsInRole("Administrateur"))
+        {
+            <a class="btn btn-outline-danger"  href="#" data-toggle="modal" data-target="#deleteModal">Désactiver</a>
+        }
+    </div>
+</div>
+
+
+<!--DeleteModal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="alertdialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="alert">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmation de la suppression</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Etes-vous sûr de vouloir supprimer cet élément ?
+            </div>
+            <div class="modal-footer">
+                <form asp-action="Delete">
+                    <input hidden name="id" value="@Model.SupportGroupId" />
+                    <button class="btn btn-danger" type="submit">Supprimer</button>
+                </form>
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+
+    </div>
+</div>

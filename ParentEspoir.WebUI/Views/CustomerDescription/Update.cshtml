@@ -1,0 +1,522 @@
+﻿@model ParentEspoir.Application.GetCustomerDescriptionModel
+
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.success != null && ViewBag.success)
+{
+    <div class="alert alert-success">
+        Les <strong>modifications</strong> ont été enregistrer avec succès !
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+    <div class="jumbotron">
+
+        <h1>Modifier le suivi détaillé pour <span class="customerName"></span></h1>
+            <a class="btn btn-outline-primary" asp-action="Detail" asp-route-id="@Model.CustomerDescriptionId">Retourner aux information de <span class="customerName"></span></a>
+
+        <hr />
+        <div class="row">
+            <div class="col">
+                <form asp-action="Update">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="CustomerDescriptionId" type="hidden" id="customerId" value="@Model.CustomerDescriptionId" />
+
+                    <div class="form-row">
+
+                        <div id="SexOption" class="col-md-3 form-group">
+                            <label asp-for="SexId" class="control-label">Sexe :</label>
+                            <select asp-for="SexId" class="form-control">
+                                <option value="">Aucun</option>
+                                @if (Model.SexId != null)
+                                {
+                                    <option v-for="sex in collection" :value="sex.id" :selected="sex.id == @Model.SexId">{{ sex.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="sex in collection" :value="sex.id">{{ sex.name }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div id="ParentOption" class="col-md-3 form-group">
+                            <label asp-for="ParentId" class="control-label">Parent :</label>
+                            <select asp-for="ParentId" class="form-control">
+                                <option value="">Aucun</option>
+                                @if (Model.ParentId != null)
+                                {
+                                    <option v-for="parent in collection" :value="parent.id" :selected="parent.id == @Model.ParentId">{{ parent.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="parent in collection" :value="parent.id">{{ parent.name }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div id="MaritalStatusOption" class="col-md-3 form-group">
+                            <label asp-for="MaritalStatusId" class="control-label">État civil :</label>
+                            <select asp-for="MaritalStatusId" class="form-control">
+                                <option value="">Aucun</option>
+                                @if (Model.MaritalStatusId != null)
+                                {
+                                    <option v-for="maritalStatus in collection" :value="maritalStatus.id" :selected="maritalStatus.id == @Model.MaritalStatusId">{{ maritalStatus.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="maritalStatus in collection" :value="maritalStatus.id">{{ maritalStatus.name }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div id="FamilyTypeOption" class="col-md-3 form-group">
+                            <label asp-for="FamilyTypeId" class="control-label">Type de famille :</label>
+                            <select asp-for="FamilyTypeId" class="form-control">
+                                <option value="">Aucun</option>
+                                @if (Model.FamilyTypeId != null)
+                                {
+                                    <option v-for="familyType in collection" :value="familyType.id" :selected="familyType.id == @Model.FamilyTypeId">{{ familyType.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="familyType in collection" :value="familyType.id">{{ familyType.name }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div id="IsPregnant" class="form-row col-md-12">
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Grossesse :</label>
+                                <select asp-for="IsPregnant" class="form-control" v-model="isPregnant">
+                                    @if (Model.PregnancyExpectedDate != null)
+                                    {
+                                        <option value="true" selected>Oui</option>
+                                        <option value="false">Non</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="true">Oui</option>
+                                        <option value="false" selected>Non</option>
+                                    }
+                                </select>
+                                <span name="test" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="PregnancyExpectedDate" class="control-label">Date prévue de l'accouchement: </label>
+                                <input asp-for="PregnancyExpectedDate" v-bind:disabled="isPregnant == 'false'" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="PregnancyExpectedDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <hr class="col-md-12" />
+
+                        <div class="form-group col-md-3">
+                            <label asp-for="ChildrenCount" class="control-label">Nombre d'enfants: </label>
+                            <input asp-for="ChildrenCount" class="form-control" min="0" />
+                            <span asp-validation-for="ChildrenCount" class="text-danger"></span>
+                        </div>
+
+
+                        @{
+                            string AgeBracketcheckedPredicat = string.Empty;
+                            for (int i = 0; i < Model.CustomerChildrenAgeBracket.Count(); i++)
+                            {
+                                if (i != 0)
+                                {
+                                    AgeBracketcheckedPredicat += " ||";
+                                }
+                                AgeBracketcheckedPredicat += "ageBracket.name == '" + Model.CustomerChildrenAgeBracket.ElementAt(i) + "'";
+                            }
+
+                        }
+
+                        <div class="col-md-12">
+                            <div class="card form-group">
+                                <div class="card-header">Tranche d'âge d'enfants:</div>
+                                <div id="ChildrenAgeBracketOption" class="card-body">
+                                    <div v-for="ageBracket in collection" :key="ageBracket.id" class="form-check form-check-inline mb-2">
+                                        @if (Model.CustomerChildrenAgeBracket.Count() > 0)
+                                        {
+                                            <input class="form-check-input" id="CustomerChildrenAgeBracket" name="CustomerChildrenAgeBracket" type="checkbox" :value="ageBracket.id" :checked="@AgeBracketcheckedPredicat" />
+                                        }
+                                        else
+                                        {
+                                            <input class="form-check-input" id="CustomerChildrenAgeBracket" name="CustomerChildrenAgeBracket" type="checkbox" :value="ageBracket.id" />
+                                        }
+                                        <label class="form-check-label">{{ageBracket.name}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="HasLegalCustody" class="form-group col-md-3">
+                            <label class="control-label">Possède la garde légale? :</label>
+                            <select class="form-control" v-model="hasCustody" v-on:change="toggelDisable">
+                                @if (Model.LegalCustodyId != null)
+                                {
+                                    <option value="true">Oui</option>
+                                    <option value="false" selected>Non</option>
+                                }
+                                else
+                                {
+                                    <option value="true" selected>Oui</option>
+                                    <option value="false">Non</option>
+                                }
+                            </select>
+                        </div>
+                        <div id="LegalCustodyOption" class="col-md-6 form-group">
+                            <label asp-for="LegalCustodyId" class="control-label">Si non est-ce :</label>
+                            <select asp-for="LegalCustodyId" class="form-control">
+                                <option value="">Aucun</option>
+                                @if (Model.LegalCustodyId != null)
+                                {
+                                    <option v-for="legalCustody in collection" :value="legalCustody.id" :selected="legalCustody.id == @Model.LegalCustodyId">{{ legalCustody.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="legalCustody in collection" :value="legalCustody.id">{{ legalCustody.name }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-3"></div>
+                        <hr class="col-md-12" />
+
+                        <div id="SchoolingOption" class="col-md-3 form-group">
+                            <label asp-for="SchoolingId" class="control-label">Niveau de scolarité :</label>
+                            <select asp-for="SchoolingId" class="form-control">
+                                <option value="">Aucun</option>
+                                @if (Model.SchoolingId != null)
+                                {
+                                    <option v-for="schooling in collection" :value="schooling.id" :selected="schooling.id == @Model.SchoolingId">{{ schooling.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="schooling in collection" :value="schooling.id">{{ schooling.name }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div id="IncomeSourceOption" class="col-md-3 form-group">
+                            <label asp-for="IncomeSourceId" class="control-label">Source de revenu :</label>
+                            <select asp-for="IncomeSourceId" class="form-control">
+                                <option value="">Aucun</option>
+                                @if (Model.IncomeSourceId != null)
+                                {
+                                    <option v-for="incomeSource in collection" :value="incomeSource.id" :selected="incomeSource.id == @Model.IncomeSourceId">{{ incomeSource.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="incomeSource in collection" :value="incomeSource.id">{{ incomeSource.name }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div id="YearlyIncomeOption" class="col-md-3 form-group">
+                            <label asp-for="YearlyIncomeId" class="control-label">Revenu annuel:</label>
+                            <select asp-for="YearlyIncomeId" class="form-control">
+                                <option value="">Aucun</option>
+                                @if (Model.YearlyIncomeId != null)
+                                {
+                                    <option v-for="yearlyIncome in collection" :value="yearlyIncome.id" :selected="yearlyIncome.id == @Model.YearlyIncomeId">{{ yearlyIncome.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="yearlyIncome in collection" :value="yearlyIncome.id">{{ yearlyIncome.name }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div id="CitizenStatusOption" class="col-md-3 form-group">
+                            <label asp-for="CitizenStatusId" class="control-label">Statut :</label>
+                            <select asp-for="CitizenStatusId" class="form-control">
+                                <option value="">Aucun</option>
+                                @if (Model.CitizenStatusId != null)
+                                {
+                                    <option v-for="citizenStatus in collection" :value="citizenStatus.id" :selected="citizenStatus.id == @Model.CitizenStatusId">{{ citizenStatus.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="citizenStatus in collection" :value="citizenStatus.id">{{ citizenStatus.name }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div id="HomeTypeOption" class="col-md-3 form-group">
+                            <label asp-for="HomeTypeId" class="control-label">Logement</label>
+                            <select asp-for="HomeTypeId" class="form-control">
+                                <option value="">Aucun</option>
+                                @if (Model.HomeTypeId != null)
+                                {
+                                    <option v-for="homeType in collection" :value="homeType.id" :selected="homeType.id == @Model.HomeTypeId">{{ homeType.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="homeType in collection" :value="homeType.id">{{ homeType.name }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div id="TransportTypeOption" class="col-md-3 form-group">
+                            <label asp-for="TransportTypeId" class="control-label">Moyen de transport :</label>
+                            <select asp-for="TransportTypeId" class="form-control">
+                                <option value="">Aucun</option>
+                                @if (Model.TransportTypeId != null)
+                                {
+                                    <option v-for="transport in collection" :value="transport.id" :selected="transport.id == @Model.TransportTypeId">{{ transport.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="transport in collection" :value="transport.id">{{ transport.name }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div id="LanguageOption" class="col-md-3 form-group">
+                            <label asp-for="LanguageSpokenId" class="control-label">Langue parlé :</label>
+                            <select asp-for="LanguageSpokenId" class="form-control">
+                                <option value="">Aucun</option>
+                                @if (Model.LanguageSpokenId != null)
+                                {
+                                    <option v-for="language in collection" :value="language.id" :selected="language.id == @Model.LanguageSpokenId">{{ language.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="language in collection" :value="language.id">{{ language.name }}</option>
+                                }
+                            </select>
+                        </div>
+
+
+                        <hr class="col-md-12" />
+
+                        <div class="form-group form-check col-md-6">
+                            <label asp-for="HasMentalHealthDiagnostic" class="control-label">Diagnostique de santé mental? :</label>
+                            <select asp-for="HasMentalHealthDiagnostic" class="form-control">
+                                <option value="@true">Oui</option>
+                                <option value="@false">Non</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group form-check col-md-6">
+                            <label asp-for="HasBeenHospitalisedInPsychiatry" class="control-label">Déjà hospitalisé en psychiatrie? :</label>
+                            <select asp-for="HasBeenHospitalisedInPsychiatry" class="form-control">
+                                <option value="@true">Oui</option>
+                                <option value="@false">Non</option>
+                            </select>
+                        </div>
+
+                        @{
+                            string socialServiceCheckedPredicat = string.Empty;
+                            for (int i = 0; i < Model.CustomerSocialService.Count(); i++)
+                            {
+                                if (i != 0)
+                                {
+                                    socialServiceCheckedPredicat += " || ";
+                                }
+                                socialServiceCheckedPredicat += "service.name == '" + Model.CustomerSocialService.ElementAt(i) + "'";
+                            }
+                        }
+
+                        <div class="col-md-12">
+                            <div class="card form-group">
+                                <div class="card-header">Aide des services sociaux?</div>
+                                <div id="SocialServiceOption" class="card-body">
+                                    <div v-for="service in collection" :key="service.id" class="form-check form-check-inline mb-2">
+                                        @if (Model.CustomerSocialService.Count() > 0)
+                                        {
+                                            <input id="CustomerSocialService" name="CustomerSocialService" class="form-check-input" type="checkbox" :value="service.id" :checked="@socialServiceCheckedPredicat" />
+                                        }
+                                        else
+                                        {
+                                            <input id="CustomerSocialService" name="CustomerSocialService" class="form-check-input" type="checkbox" :value="service.id" />
+                                        }
+                                        <label class="ifrm-check-label">{{service.name}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-check col-md-6">
+                            <label asp-for="HasContactWithDPJnow" class="control-label">En contact avec la DPJ présentement?:</label>
+                            <select asp-for="HasContactWithDPJnow" class="form-control">
+                                <option value="@true">Oui</option>
+                                <option value="@false">Non</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group form-check col-md-6">
+                            <label asp-for="HasContactWithDPJinPast" class="control-label">En contact avec la DPJ par le passé?:</label>
+                            <select asp-for="HasContactWithDPJinPast" class="form-control">
+                                <option value="@true">Oui</option>
+                                <option value="@false">Non</option>
+                            </select>
+                        </div>
+
+                        <div id="HasPersonnelFollowUp" class="form-row col-md-12">
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Besoin d'un suivi individuel? :</label>
+                                <select asp-for="HasPersonnalFollowUp" class="form-control" v-model="hasPersonnelFollowUp">
+                                    @if (Model.PersonnalFollowUpMeetingCount != null)
+                                    {
+                                        <option value="true" selected>Oui</option>
+                                        <option value="false">Non</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="true">Oui</option>
+                                        <option value="false" selected>Non</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="PersonnalFollowUpMeetingCount" class="control-label">Si oui, combien de rencontres d'une heure? :</label>
+                                <input asp-for="PersonnalFollowUpMeetingCount" v-bind:disabled="hasPersonnelFollowUp == 'false'" class="form-control" min="0" />
+                                <span asp-validation-for="PersonnalFollowUpMeetingCount" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <hr class="col-md-12" />
+
+                        <!--Groupe entraide-->
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label asp-for="WillParticipateToHelpingGroup" class="control-label">Aimerait participer à un groupe d'entraide? :</label>
+                                    <select asp-for="WillParticipateToHelpingGroup" class="form-control">
+                                        <option value="@true">Oui</option>
+                                        <option value="@false">Non</option>
+                                    </select>
+                                </div>
+
+                                @{
+                                    string skillCheckedPredicat = string.Empty;
+                                    for (int i = 0; i < Model.CustomerSkillToDevelop.Count(); i++)
+                                    {
+                                        if (i != 0)
+                                        {
+                                            skillCheckedPredicat += " ||";
+                                        }
+                                        skillCheckedPredicat += "skill.name == '" + Model.CustomerSkillToDevelop.ElementAt(i) + "'";
+                                    }
+                                }
+                                <div class="col-md-12">
+                                    <div class="form-group card">
+                                        <div class="card-header">Compétences à développer?: </div>
+                                        <div class="card-body" id="SkillToDevelopOption">
+                                            <div v-for="skill in collection" :key="skill.id" class="form-check form-check-inline">
+                                                @if (Model.CustomerSkillToDevelop.Count() > 0)
+                                                {
+                                                    <input id="CustomerSkillToDevelop" name="CustomerSkillToDevelop" class="form-check-input ml-2" type="checkbox" :value="skill.id" :checked="@skillCheckedPredicat" />
+                                                }
+                                                else
+                                                {
+                                                    <input id="CustomerSkillToDevelop" name="CustomerSkillToDevelop" class="form-check-input ml-2" type="checkbox" :value="skill.id" />
+                                                }
+                                                <label class="control-label">{{skill.name}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Disponibilités-->
+                        <div class="col-md-6">
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div id="AvailabilityOption" class=" form-group">
+                                        <label asp-for="AvailabilityId" class="control-label">Disponibilités?:</label>
+                                        <select asp-for="AvailabilityId" class="form-control">
+                                            <option value="">Aucun</option>
+                                            @if (Model.AvailabilityId != null)
+                                            {
+                                                <option v-for="availability in collection" :value="availability.id" :selected="availability.id == @Model.AvailabilityId">{{ availability.name }}</option>
+                                            }
+                                            else
+                                            {
+                                                <option v-for="availability in collection" :value="availability.id">{{ availability.name }}</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                @{
+                                    string[] days = { "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche" };
+                                }
+
+                                <div class="col-md-12">
+                                    <div class="form-group card">
+                                        <div class="card-header">Journée(s) préférée(s): </div>
+                                        <div id="PreferedDaysOption" class="card-body">
+                                            @for (int i = 0; i < 7; i++)
+                                            {
+                                                <div class="form-check form-check-inline">
+                                                    @if (Model.PreferedDays.Contains((DayOfWeek)i))
+                                                    {
+                                                        <input id="PreferedDays" name="PreferedDays" class="form-check-input ml-2" type="checkbox" value="@i" checked />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input id="PreferedDays" name="PreferedDays" class="form-check-input ml-2" type="checkbox" value="@i" />
+                                                    }
+                                                    <label class="form-check-label">@days[i]</label>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <hr class="col-md-12 " />
+
+                        <div id="IsMember" class="form-row col-md-12">
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Est-ce un membre?:</label>
+                                <select class="form-control" v-model="isMember">
+                                    @if (Model.WantsToBecomeMember != null)
+                                    {
+                                        <option value="true">Oui</option>
+                                        <option value="false" selected>Non</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="true">Oui</option>
+                                        <option value="false" selected>Non</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="WantsToBecomeMember" class="control-label">Si non, désire-t-il devenir membre? :</label>
+                                <select asp-for="WantsToBecomeMember" class="form-control" v-bind:disabled="isMember == 'true'">
+                                    <option value="@true">Oui</option>
+                                    <option value="@false">Non</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <input type="submit" value="Enregistrer les modifications" class="btn btn-primary" onclick="hasChange = false" />
+                            <a class="btn btn-outline-primary" asp-action="Detail" asp-route-id="@Model.CustomerDescriptionId">Retourner aux information de <span class="customerName"></span></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            
+        </div>
+    </div>
+
+@section Scripts {
+    <script src="~/js/CustomerDescription/updateCustomerDescription.js"></script>
+}

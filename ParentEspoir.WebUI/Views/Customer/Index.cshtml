@@ -1,0 +1,245 @@
+﻿@model ParentEspoir.Application.CustomerListModel
+
+@{
+    ViewData["Title"] = "Index Client";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/customer/customer.css" />
+}
+
+<!--MESSAGE TO USER-->
+@if (ViewBag.DeleteSuccess != null && ViewBag.DeleteSuccess)
+{
+    <div class="alert alert-success">
+        La <strong>supression</strong> a réussi !
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<!--MESSAGE TO USER-->
+@if (ViewBag.EditSuccess != null && ViewBag.EditSuccess)
+{
+    <div class="alert alert-success">
+        La <strong>modification</strong> a bien été enregistrée !
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-md-2">
+            <h1>Clients</h1>
+            @if (Model.TotalCount > 1)
+            {
+                <h6>@Model.TotalCount résultats</h6>
+            }
+            else
+            {
+                <h6>@Model.TotalCount résultat</h6>
+            }
+
+            <h5>Page @Model.CurrentPage / @Model.TotalPages</h5>
+
+
+        </div>
+        <div class="col-md-8 align-self-end">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <button id="searchButton" class="btn btn-outline-primary" type="button" onclick="redirectWithSearch()">Rechercher</button>
+                </div>
+                <input id="searchInput" class="form-control" type="text" placeholder="Rechercher par nom..." onchange="changeSearchFilterValue()">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="jumbotron">
+    <p>
+        <a class="btn btn-outline-primary" asp-action="Create">Ajouter un client</a>
+    </p>
+    @if (Model.TotalCount == 0)
+    {
+        <p>Aucun client n'a été trouvé!</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Numéro de dossier
+                    </th>
+                    <th>
+                        @if (Model.SortOrder != null && Model.SortOrder.Equals("LastNameAscending"))
+                        {
+                            <a asp-action="Index"
+                               asp-route-currentPage="1"
+                               asp-route-sortOrder="LastNameDescending"
+                               asp-route-searchFilter="@Model.SearchFilter"
+                               style="text-decoration:none; color:black;">
+                                Nom <i class="arrow down"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Index"
+                               asp-route-currentPage="1"
+                               asp-route-sortOrder="LastNameAscending"
+                               asp-route-searchFilter="@Model.SearchFilter"
+                               style="text-decoration:none; color:black;">
+                                Nom <i class="arrow up"></i>
+                            </a>
+                        }
+                    </th>
+                    <th>
+                        Adresse
+                    </th>
+                    <th>
+                        @if (Model.SortOrder != null && Model.SortOrder.Equals("CityAscending"))
+                        {
+                            <a asp-action="Index"
+                               asp-route-currentPage="1"
+                               asp-route-sortOrder="CityDescending"
+                               asp-route-searchFilter="@Model.SearchFilter"
+                               style="text-decoration:none; color:black;">
+                                Ville <i class="arrow down"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Index"
+                               asp-route-currentPage="1"
+                               asp-route-sortOrder="CityAscending"
+                               asp-route-searchFilter="@Model.SearchFilter"
+                               style="text-decoration:none; color:black;">
+                                Ville <i class="arrow up"></i>
+                            </a>
+                        }
+                    </th>
+                    <th>
+                        Téléphone
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Customers)
+                {
+                    string fullName = $"{item.LastName}, {item.FirstName}";
+                    <tr>
+                        <td>
+                            @item.FileNumber
+                        </td>
+                        <td>
+                            @fullName
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.City)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Phone)
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id">Détails</a> |
+                            <a asp-action="Update" asp-route-id="@item.Id">Modifier</a>
+                            @if (User.IsInRole("Administrateur"))
+                            {
+                                <span> | </span>
+                                <a asp-controller="CustomerDescription" asp-action="Detail" asp-route-id="@item.Id">Voir la fiche détaillée</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!--The rest is all for pagination-->
+        @if (Model.TotalPages > 1)
+        {
+            int startAt = Model.CurrentPage - 5;
+
+            if (Model.TotalPages - Model.CurrentPage < 4)
+            {
+                startAt = Model.TotalPages - 9;
+            }
+            if (startAt < 1)
+            {
+                startAt = 1;
+            }
+
+            <nav aria-label="...">
+                <ul class="pagination justify-content-center">
+                    @if (Model.CurrentPage == startAt)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">Précédente</span>
+                        </li>
+                    }
+                    else
+                    {
+                        int previous = Model.CurrentPage - 1;
+                        <li class="page-item active">
+                            @Html.ActionLink("Précédente", "Index", new { currentPage = previous, sortOrder = Model.SortOrder, searchFilter = Model.SearchFilter }, new { @class = "page-link" })
+                        </li>
+                    }
+                    @if (startAt > 1)
+                    {
+                        <li class="page-item">
+                            @Html.ActionLink("...", "Index", new { currentPage = 1, sortOrder = Model.SortOrder, searchFilter = Model.SearchFilter }, new { @class = "page-link" })
+                        </li>
+                    }
+                    @for (int i = startAt; i <= Model.TotalPages && i <= startAt + 10; i++)
+                    {
+                        if (i == Model.CurrentPage)
+                        {
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    @i
+                                    <span class="sr-only">(current)</span>
+                                </span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                @Html.ActionLink(i.ToString(), "Index", new { currentPage = i, sortOrder = Model.SortOrder, searchFilter = Model.SearchFilter }, new { @class = "page-link" })
+                            </li>
+                        }
+                    }
+                    @if (Model.TotalPages > startAt + 10)
+                    {
+                        <li class="page-item">
+                            @Html.ActionLink("...", "Index", new { currentPage = Model.TotalPages, sortOrder = Model.SortOrder, searchFilter = Model.SearchFilter }, new { @class = "page-link" })
+                        </li>
+                    }
+                    @if (Model.CurrentPage == Model.TotalPages)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">Prochaine</span>
+                        </li>
+                    }
+                    else
+                    {
+                        int next = Model.CurrentPage + 1;
+                        <li class="page-item active">
+                            @Html.ActionLink("Prochaine", "Index", new { currentPage = next, sortOrder = Model.SortOrder, searchFilter = Model.SearchFilter }, new { @class = "page-link" })
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+</div>
+
+@section Scripts{
+    <script src="~/js/Customer/IndexCustomer.js"></script>
+}

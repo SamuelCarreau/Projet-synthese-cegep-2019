@@ -1,0 +1,93 @@
+﻿@model IEnumerable<ParentEspoir.Domain.Entities.Volunteering>
+
+@{
+    ViewData["Title"] = "Bénévolat";
+}
+
+<div class="jumbotron">
+    @if (ViewBag.DeleteSucceed != null && ViewBag.DeleteSucceed)
+    {
+        <div class="alert alert-success">
+            La <strong>désactivation</strong> a réussi.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    @if (ViewBag.UpdateSuccess != null && ViewBag.UpdateSuccess)
+    {
+        <div class="alert alert-success">
+            La <strong>modification</strong> a été fonctionné.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <h1>Bénévolat de @ViewBag.CustomerName</h1>
+
+    <p>
+        <a class="btn btn-outline-primary" asp-action="Create" asp-route-id="@ViewBag.customerId">Ajouter</a>
+    </p>
+
+    @if (Model.Count() == 0)
+    {
+        <p>Il n'y a aucun bénévolat pour ce client</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Titre
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Type de bénévolat
+                    </th>
+                    <th>
+                        Nombre d'heures
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        @if (item.Date != null)
+                        {
+                            <td>
+                                @(((DateTime)item.Date).ToString("yyyy/MM/dd"))
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                Aucune Date indiquée
+                            </td>
+                        }
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Type.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HourCount)
+                        </td>
+                        <td>
+                            <a asp-action="Update" asp-route-id="@item.CustomerId" asp-route-idvolunteering="@item.VolunteeringId">Modifier</a> |
+                            <a asp-action="Details" asp-route-id="@ViewBag.CustomerId" asp-route-idvolunteering="@item.VolunteeringId">Consulter</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    <a class="btn btn-outline-primary" asp-controller="Customer" asp-action="Details" asp-route-id="@ViewBag.CustomerId">Retour au client</a>
+</div>

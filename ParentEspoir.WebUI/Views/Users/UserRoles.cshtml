@@ -1,0 +1,54 @@
+﻿@model ParentEspoir.Application.GetRolesModel
+
+@{
+    ViewData["Title"] = "Permissions";
+}
+
+<div class="jumbotron">
+    <div class="container">
+
+
+        <div id="userPermission" class="col-5">
+            <h4>Permissions</h4>
+            <div id="errorMessage" style="display: none;" class="alert alert-danger">
+                L'enregistrement n'a pas fonctionné
+            </div>
+            <div id="successMessage" style="display: none;" class="alert alert-success">
+                Les modifications ont été enregistré
+            </div>
+            <hr />
+            <ul id="roles" class="list-group mb-3">
+                @foreach (var role in Model.IdentityRoles)
+                {
+                    var id = role.Id.Replace("-", "");
+                    @if (Model.UserRoles.Contains(role.Name))
+                    {
+                        <li id="@id" rolename="@role.NormalizedName" class="list-group-item active" onclick="select('@id')">
+                            @role.Name
+                        </li>
+                    }
+                    else
+                    {
+                        <li id="@id" rolename="@role.NormalizedName" class="list-group-item" onclick="select('@id')">
+                            @role.Name
+                        </li>
+                    }
+                }
+            </ul>
+            <button onclick="send('@Model.User.Id')" class="btn btn-primary">Enregistrer</button>
+            <a class="btn btn-outline-primary" asp-action="Index">Retour à la liste</a>
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Users/roles.css" />
+}
+
+@section Scripts {
+    <script src="~/js/Users/Users.js"></script>
+}

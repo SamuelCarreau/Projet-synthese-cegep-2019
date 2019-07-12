@@ -1,0 +1,82 @@
+﻿@model IEnumerable<Document>
+
+@{
+    ViewData["Title"] = "Documents";
+}
+
+@if (ViewBag.UpdateSuccess != null && ViewBag.UpdateSuccess)
+{
+    <div class="alert alert-success">
+        La <strong>modification</strong> a bien été effectué !
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+@if (ViewBag.DeleteSucceed != null && ViewBag.DeleteSucceed)
+{
+    <div class="alert alert-success">
+        La <strong>désactivation</strong> a bien été effectué !
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+    <div class="jumbotron">
+        <h1>Documents de @ViewBag.CustomerName</h1>
+
+        <a class="btn btn-outline-primary mb-2" asp-action="Create" asp-route-id="@ViewBag.CustomerId">Ajouter</a>
+
+        @if (Model.Count() == 0)
+        {
+            <p>Il n'y a aucun document pour ce client</p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Titre
+                        </th>
+                        <th>
+                            Document
+                        </th>
+                        <th>
+                            Type de document
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DocumentName)
+                            </td>
+                            <td>
+                                <a href="@item.Path" download="">Télécharger</a>
+                            </td>
+                            <td>
+                                @if (item.DocumentType == null)
+                                {
+                                    <span>Aucun</span>
+                                }
+                                else
+                                {
+                                    <span>@item.DocumentType.Name</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Update" asp-route-id="@ViewBag.CustomerId" asp-route-idDocument="@item.DocumentId">Modifier</a> |
+                                <a asp-action="Details" asp-route-id="@ViewBag.CustomerId" asp-route-idDocument="@item.DocumentId">Consulter</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        <a class="btn btn-outline-primary" asp-controller="Customer" asp-action="Details" asp-route-id="@ViewBag.CustomerId">Retour au client</a>
+    </div>

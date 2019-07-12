@@ -1,0 +1,94 @@
+﻿@model IEnumerable<SupportGrougModel>
+
+@{
+    ViewData["Title"] = "Groupes de soutien";
+}
+
+@if (ViewBag.EditSuccess != null && ViewBag.EditSuccess)
+{
+    <div class="alert alert-success">
+        La <strong>modification</strong> a bien été enregistrer.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+@if (ViewBag.DeleteSucced != null && ViewBag.DeleteSucced)
+{
+    <div class="alert alert-success">
+        La <strong>désactivation</strong> a réussi.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div class="jumbotron">
+
+    <h1>Groupes de soutien</h1>
+
+
+    <a class="btn btn-outline-primary mb-3" asp-action="Create">Ajouter un groupe de soutien</a>
+
+
+    @if (Model.Count() == 0)
+    {
+        <p>Il n'y a aucun groupe de soutien</p>
+    }
+    else
+    {
+        <table class="table">
+
+            <thead>
+
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        Adresse
+                    </th>
+                    <th>
+                        Responsable
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td width="18%">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                        <td>
+                            @if (item.Description == null || item.Description.Length <= 255)
+                            {
+                                @item.Description
+                            }
+                            else
+                            {
+                                @item.Description.Remove(255)
+                                <span>...</span>
+                            }
+                        </td>
+                        <td width="18%">
+                            <a asp-action="Edit" asp-route-id="@item.SupportGroupId">Modifier</a> |
+                            <a asp-action="Details" asp-route-id="@item.SupportGroupId">Consulter</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+</div>

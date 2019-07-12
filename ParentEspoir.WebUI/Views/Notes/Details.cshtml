@@ -1,0 +1,110 @@
+﻿@model ParentEspoir.Application.GetNoteModel
+
+@{
+    ViewData["Title"] = "Note";
+}
+
+@if (ViewBag.DeleteFailed != null && ViewBag.DeleteFailed)
+{
+    <div id="deleteFailed" class="alerte alert-danger">
+        La <strong>désactivation</strong> n'a pas fonctionné
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div class="jumbotron">
+
+    <div>
+        <h4>Détail de la note</h4>
+        <hr />
+        <dl class="row">
+
+            <dt class="col-sm-2">
+                Titre
+            </dt>
+            <dd class="col-sm-10">
+                @Model.NoteName
+            </dd>
+            <dt class="col-sm-2">
+                Date
+            </dt>
+            <dd class="col-sm-10">
+                @Model.CreationDate?.ToString("yyyy/MM/dd")
+            </dd>
+
+            <dt class="col-sm-2">
+                Type de note
+            </dt>
+            @if (Model.NoteTypeId == null)
+            {
+                <dd class="col-sm-10">
+                    Aucun
+                </dd>
+            }
+            else
+            {
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.NoteTypeId)
+                </dd>
+            }
+
+            <dt class="col-sm-2">
+                Nom du responsable
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.SupervisorName)
+            </dd>
+            <dt class="col-sm-2">
+                Titre du responsable
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.SupervisorTitle)
+            </dd>
+            <dt class="col-sm-2">
+                Note
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Body)
+            </dd>
+
+
+        </dl>
+    </div>
+    <div>
+        @if (User.IsInRole("Administrateur"))
+        {
+            <a  class="btn btn-outline-danger" href="#" data-toggle="modal" data-target="#deleteModal">Supprimer</a>
+        }
+        <a class="btn btn-outline-primary" asp-action="Index" asp-route-id="@Model.CustomerId">Retour à la liste</a>
+    </div>
+</div>
+<!--DeleteModal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="alertdialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="alert">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmation de la suppression</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Etes-vous sûr de vouloir supprimer cet élément ?
+            </div>
+            <div class="modal-footer">
+                <form asp-action="Delete" asp-route-id="@Model.CustomerId">
+                    <input hidden name="idNote" value="@Model.NoteId" />
+                    <button class="btn btn-danger" type="submit">Supprimer</button>
+                </form>
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+

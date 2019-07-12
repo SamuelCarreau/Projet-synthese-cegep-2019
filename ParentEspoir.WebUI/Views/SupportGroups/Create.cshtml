@@ -1,0 +1,75 @@
+﻿@model ParentEspoir.Application.CreateSupportGroupCommand
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+@if (ViewBag.OperationSuccess != null && ViewBag.OperationSuccess)
+{
+    <div class="alert alert-success">
+        Le groupe a bien été <strong>ajouté</strong>.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+    <div class="jumbotron">
+        <h4>Ajouter un groupe de soutien</h4>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <form autocomplete="off" asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        @*<label asp-for="Address" class="control-label"></label>*@
+                        @*J'ai mis ce Label en commentaire et mis un label ordinaire pour
+                            corriger la faute simplement.. (pourquoi ils utilisaient asp-for 
+                            pour un label?*@
+                        <label class="control-label">Adresse</label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Responsable du groupe</label>
+                        <select id="UserSelection" class="form-control" name="UserId">
+                            <option value="">Aucun</option>
+                            @if (Model?.UserId != null)
+                            {
+                                <option v-for="user in users" :value="user.id" :selected="user.id == '@Model.UserId'">
+                                    {{ nameToString(user) }}
+                                </option>
+                            }
+                            else
+                            {
+                                <option v-for="user in users" :value="user.id">
+                                    {{ nameToString(user) }}
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div >
+                        <input type="submit" value="Ajouter" class="btn btn-primary" />
+                        <a class="btn btn-outline-primary" asp-action="Index">Retour à la liste</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+@section Scripts {
+    <script src="~/js/Customer/SupportGroup/SupportGroup.js"></script>
+    <script src="~/js/clearform.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

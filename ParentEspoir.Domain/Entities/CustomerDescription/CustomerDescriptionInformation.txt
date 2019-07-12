@@ -1,0 +1,24 @@
+information sur CustomerDescription entity 
+
+Relation "one to one" avec Customer, Member, PersonnalFollowUp, Pregnancy
+	
+
+Les références :
+Toutes les relation "one to many" avec les autres tables (référence) sont Required() (not null) mais devrait possèder
+une option "inconue" si la cliente n'as pas l'information et veut tous de même procéder. Chacune de ces reference on les Id comme propriete
+pour pouvoir les mettre IsRequired dans le fichier de config.
+
+
+3 exceptions qui peuvent être null :
+	LegalCustody
+	member
+
+Les Collections avec table de jonction (relation many to many) :
+
+Les tables de jonctions suivante doivent être remplis :
+	PreferedDays (est une table de jonctions avec un enum DayOfWeek)
+	CustomerSkillsToDevelops
+	CustomerChildrenAgeBrackets
+excepté :
+	CustomerSocialService sera vide si HasHelpFromSocialServices == false,
+

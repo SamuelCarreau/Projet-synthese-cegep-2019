@@ -1,0 +1,69 @@
+﻿@model ParentEspoir.Application.UpdateUserCommand
+@{
+    ViewData["Title"] = "Modifier un utilisateur";
+}
+
+@if (ViewBag.ErrorSavingChange != null && ViewBag.ErrorSavingChange)
+{
+<div class="alert alert-danger">
+    Un <strong>erreur</strong> est survenu lors de l'<strong>enregistrement</strong> des informations
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+}
+
+@if (ViewBag.ImpossibleToProcced != null && ViewBag.ImpossibleToProcced)
+{
+<div class="alert alert-danger">
+    <strong>Impossible</strong> d'effectuer la requête
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+}
+
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <form method="post" asp-action="Edit">
+                    <h4>Modifier un utilisateur</h4>
+                    <hr />
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Name"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="UserName"></label>
+                        <input asp-for="UserName" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <input type="hidden" asp-for="PasswordToken" />
+                    <div class="form-group">
+                        <label asp-for="NewPassword"></label>
+                        <input asp-for="NewPassword" class="form-control" />
+                        <span asp-validation-for="NewPassword" class="text-danger"></span>
+                        @if (ViewBag.BadPassword != null && ViewBag.BadPassword)
+                        {
+                            <span class="text-danger">Le mot de passe doit contenir une lettre minuscule, une lettre majuscule, un chiffre et un caractère spéciaux</span>
+                        }
+                    </div>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                    <a class="btn btn-outline-primary" asp-action="Index">Retour à la liste</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+}

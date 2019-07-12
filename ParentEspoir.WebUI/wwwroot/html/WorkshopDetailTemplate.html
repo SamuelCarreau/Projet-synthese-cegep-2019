@@ -1,0 +1,40 @@
+﻿<script type="text/x-template" id="test">
+    <div class="details pr-1 mb-2">
+        <p class="text-center">{{'Cette atelier à ' + seancesCount + " séances d'une durée totale de " + totalDuration + " heures."}}</p>
+        <dl class="row mb-0">
+            <dt class="col-sm-4">
+                Nom:
+            </dt>
+            <dd class="col-sm-8">
+                {{ selectedWorkshop.workshopName }}
+            </dd>
+            <dt class="col-sm-4">
+                Volet:
+            </dt>
+            <dd class="col-sm-8">
+                {{ selectedWorkshop.workshopTypeName }}
+            </dd>
+            <dt class="col-sm-4">
+                Début:
+            </dt>
+            <dd class="col-sm-8">
+                {{ startDate }}
+            </dd>
+            <dt class="col-sm-4">
+                Fin:
+            </dt>
+            <dd class="col-sm-8">
+                {{ endDate }}
+            </dd>
+        </dl>
+        <p class="mb-1">Cette atelier est un atelier <strong>{{ isOpen }}.</strong></p>
+        <dl class="row">
+            <dt class="col-sm-12">
+                Description:
+            </dt>
+            <dd class="col-sm-12">
+                {{ selectedWorkshop.workshopDescription }}
+            </dd>
+        </dl>
+    </div>
+</script>

@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Note>
+
+@{
+    ViewData["Title"] = "Note";
+}
+
+@if (ViewBag.CreationSuccess != null && (bool)ViewBag.CreationSuccess)
+{
+    <div class="alert alert-success">
+        La note a bien été <strong>ajouté</strong>  !
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@if (ViewBag.DeleteSuccess != null && ViewBag.DeleteSuccess)
+{
+    <div class="alert alert-success">
+        La <strong>désactivation</strong> a réussi
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div class="jumbotron">
+
+<h1>Note de @ViewBag.CustomerName</h1>
+
+<p>
+    <a class="btn btn-outline-primary" asp-action="Create" asp-route-id="@ViewBag.CustomerId">Ajouter</a>
+</p>
+
+@if (Model.Count() == 0)
+{
+    <p>Il n'y a aucune note reliée pour ce client</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Nom de la note
+                </th>
+                <th>
+                    Date de création
+                </th>
+                <th>
+                    Nom du responsable
+                </th>
+                <th>
+                    Titre du responsable
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoteName)
+                    </td>
+                    <td>
+                        @item.CreationDate.Value.ToShortDateString()
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SupervisorName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SupervisorTitle)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.CustomerId" asp-route-idNote="@item.NoteId">Consulter</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<a class="btn btn-outline-primary" asp-controller="Customer" asp-action="Details" asp-route-id="@ViewBag.CustomerId">Retour au client</a>
+</div>

@@ -1,0 +1,75 @@
+﻿@model ObjectiveIndexViewModel
+
+@{
+    ViewData["Title"] = "Objectifs de " + Model.CustomerName;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" asp-route-id="@Model.CustomerId">Ajouter</a>
+</p>
+
+@if (Model.Count() == 0)
+{
+    <p>Il n'y a aucun objectif relié pour ce client.</p>
+}
+else
+{
+    <div class="row">
+
+        @foreach (var habilityList in Model)
+        {
+            <h3>@string.Concat(habilityList.Key, " (", Model.HabilitiesHourToReach[habilityList.Key].TotalHours, " Heures)")</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Code
+                        </th>
+                        <th>
+                            Objectif
+                        </th>
+                        <th>
+                            État
+                        </th>
+                        <th>
+                            Heure visé
+                        </th>
+                        <th>
+                            Date début
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var objective in habilityList.Value)
+                    {
+                        <tr>
+                            <td>
+                                @objective.Code
+                            </td>
+                            <td>
+                                @objective.Name
+                            </td>
+                            <td>
+                                @objective.ObjectiveState
+                            </td>
+                            <td>
+                                @objective.HourCount
+                            </td>
+                            <td>
+                                @objective.StartDate
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@objective.CustomerId" asp-route-idObjective="@objective.Id">Consulter</a> |
+                                <a asp-action="Edit" asp-route-id="@objective.CustomerId" asp-route-idObjective="@objective.Id">Modifier</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        }
+    </div>
+}

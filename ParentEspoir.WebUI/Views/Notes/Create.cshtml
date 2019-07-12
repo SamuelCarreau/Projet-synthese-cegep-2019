@@ -1,0 +1,82 @@
+﻿@model ParentEspoir.Application.CreateNoteCommand
+
+@{
+    ViewData["Title"] = "Create";
+    var noteTypes = ViewBag.noteTypes;
+}
+
+@if (ViewBag.CreationFailed != null && ViewBag.CreationFailed)
+{
+    <div class="alert alert-danger">
+        L'<strong>enregistrement</strong> de la note a échoué
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div class="jumbotron">
+
+
+    <h1>Creer une note</h1>
+
+    <hr />
+
+    <div class="row">
+        <div class="col">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="CustomerId" />
+                <div class="form-row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Nom de la note</label>
+                            <input asp-for="NoteName" type="text" class="form-control" />
+                            <span asp-validation-for="NoteName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Nom du responsable</label>
+                            <input asp-for="SupervisorName" type="text" class="form-control" />
+                            <span asp-validation-for="SupervisorName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Titre du responsable</label>
+                            <input asp-for="SupervisorTitle" class="form-control" />
+                            <span asp-validation-for="SupervisorTitle" class="text-danger"></span>
+                        </div>
+                        <div id="NoteTypeApp" class="form-group">
+                            <label asp-for="NoteTypeId" class="control-label">Type de la note</label>
+                            <select class="form-control" name="NoteTypeId">
+                                <option value="">Aucun</option>
+                                <option v-for="notetype in collection" v-bind:value="notetype.id">{{ notetype.name }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="control-label">Note</label>
+                            <textarea style="resize : none;" rows="12" asp-for="Body" class="form-control"> </textarea>
+                            <span asp-validation-for="Body" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div>
+                            <input type="submit" value="Enregistrer" class="btn btn-primary" />
+                            <a class="btn btn-outline-primary" asp-action="Index" asp-route-id="@Model.CustomerId">Retour à la liste</a>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+@section Scripts {
+    <script src="~/js/Customer/Note/NoteType.js"></script>
+}
+
+

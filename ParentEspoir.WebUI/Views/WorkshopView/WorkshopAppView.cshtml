@@ -1,0 +1,65 @@
+﻿@{
+    Layout = "_WorkshopLayout.cshtml";
+}
+
+<div id="app">
+    <link href="~/html/WorkshopDetailTemplate.html" rel="import" />
+
+    <loading-screen v-if="isLoading"></loading-screen>
+
+    <div class="container-fluid">
+        <div class="row">
+            <side-bar class="all-workshop-card"
+                      :sessions="sessions"
+                      :user-can-manage-session="userCanManageSession"
+                      v-on:change-selected-session="(id) => updateSelectedSession(id)"></side-bar>
+
+            <workshop-card v-if="isWorkshopCardVisible"
+                           id="workshop"
+                           class="col-md-3 all-workshop-card"
+                           :user-can-manage-session="userCanManageSession"
+                           :selected-session-string="selectedSessionString"
+                           :selected-workshop-id="selectedWorkshopId"
+                           :selected-workshop-seance-list="selectedWorkshopSeanceList"
+                           :selected-workshop-details="selectedWorkshopDetails"
+                           :session-id="selectedSessionId"
+                           :session-start-date="selectedSessionStartDate"
+                           :selected-session-workshop-list="selectedSessionWorkshopList"
+                           :workshop-types="workshopTypes"
+                           :is-workshop-selected="isWorkshopSelected"></workshop-card>
+
+            <seance-card v-if="isSeanceCardVisible"
+                         id="seance"
+                         class="col-md-3 all-workshop-card"
+                         :selected-session-string="selectedSessionString"
+                         :selected-seance="selectedSeance"
+                         :selected-workshop-details="selectedWorkshopDetails"
+                         :selected-workshop-seance-list="selectedWorkshopSeanceList"
+                         :is-seance-selected="isSeanceSelected"></seance-card>
+
+            <workshop-members-card v-if="isWorkshopMembersCardVisible"
+                                   :class="{ 'col-md-5': isMembersCardsLarge,'col-md-4': !isMembersCardsLarge, 'all-workshop-card': true }"
+                                   :selected-session-string="selectedSessionString"
+                                   :selected-workshop-details="selectedWorkshopDetails"
+                                   :members="selectedWorkshopMembers"
+                                   :selected-workshop-id="selectedWorkshopDetails.workshopId"></workshop-members-card>
+
+            <seance-members-card v-if="isSeanceMembersCardVisible"
+                                 :class="{ 'col-md-5': isMembersCardsLarge,'col-md-4': !isMembersCardsLarge, 'all-workshop-card': true }"
+                                 :selected-seance="selectedSeance"
+                                 ref="seanceMemberCard"></seance-members-card>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Workshop/sideBarSession.js"></script>
+    <script src="~/js/Workshop/simpleModal.js"></script>
+    <script src="~/js/Workshop/workshopCard.js"></script>
+    <script src="~/js/Workshop/seanceCard.js"></script>
+    <script src="~/js/Workshop/workshopMembersCard.js"></script>
+    <script src="~/js/Workshop/seanceMembersCard.js"></script>
+    <script src="~/js/Workshop/loading-screen.js"></script>
+    <script src="~/js/Workshop/main.js"></script>
+}

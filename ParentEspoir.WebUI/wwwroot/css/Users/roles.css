@@ -1,0 +1,5 @@
+﻿li:hover {
+    cursor: pointer;
+    border: 2px thin;
+    border-color: cornflowerblue;
+}

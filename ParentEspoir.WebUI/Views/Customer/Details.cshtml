@@ -1,0 +1,194 @@
+﻿@model ParentEspoir.Application.CustomerModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="jumbotron">
+    <h1>Détails Client</h1>
+
+    <div class="btn-group">
+
+        <a class="btn btn-outline-primary" asp-controller="Volunteering" asp-action="Index" asp-route-id="@Model.Id">Bénévolats</a>
+        <a class="btn btn-outline-primary" asp-controller="Documents" asp-action="Index" asp-route-id="@Model.Id">Documents</a>
+        <a class="btn btn-outline-primary" asp-controller="Notes" asp-action="Index" asp-route-id="@Model.Id">Notes</a>
+        <a class="btn btn-outline-primary" asp-controller="Objectives" asp-action="Index" asp-route-id="@Model.Id">Objectifs</a>
+    </div>
+
+    <div>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">
+                Numéro de dossier
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.FileNumber)
+            </dd>
+            <dt class="col-sm-4">
+                Prénom
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+            <dt class="col-sm-4">
+                Nom
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.LastName)
+            </dd>
+            <dt class="col-sm-4">
+                Date de naissance
+            </dt>
+            <dd class="col-sm-8">
+                @Model.DateOfBirth?.ToString("yyyy/MM/dd")
+            </dd>
+            <dt class="col-sm-4">
+                Adresse
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+            <dt class="col-sm-4">
+                Code postal
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.PostalCodeName)
+            </dd>
+            <dt class="col-sm-4">
+                Ville
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.CityName)
+            </dd>
+            <dt class="col-sm-4">
+                Province
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ProvinceName)
+            </dd>
+            <dt class="col-sm-4">
+                Pays
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.CountryName)
+            </dd>
+            <dt class="col-sm-4">
+                Téléphone
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Phone)
+            </dd>
+            <dt class="col-sm-4">
+                Téléphone d'urgence
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.SecondaryPhone)
+            </dd>
+            <dt class="col-sm-4">
+                Est un client depuis le
+            </dt>
+            <dd class="col-sm-8">
+                @Model.CreationDate.ToString("yyyy/MM/dd")
+            </dd>
+            @if (Model.IsMember)
+            {
+                <dt class="col-sm-4">
+                    Est un membre depuis le
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.IsMemberSince)
+                </dd>
+            }
+            <dt class="col-sm-4">
+                Groupe de support
+            </dt>
+            <dd class="col-sm-8">
+                @if (Model.SupportGroupName == null)
+                {
+                    @Html.DisplayName("Aucun");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.SupportGroupName)
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Référé par
+            </dt>
+            <dd class="col-sm-8">
+                @if (Model.ReferenceByName == null)
+                {
+                    @Html.DisplayName("Aucun");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.ReferenceByName)
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Inscrit au programme du ministère
+            </dt>
+            <dd class="col-sm-8">
+                @if (Model.IsInscripted == false)
+                {
+                    <span>
+                        Aucune inscription
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        Est inscrit(e)
+                    </span>
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Dernière date d'inscription au programme
+            </dt>
+            <dd class="col-sm-8">
+                @if (Model.IsInscripted == false)
+                {
+                    <span>Le client n'a jamais été inscrit</span>
+                }
+                else
+                {
+                    @Model.InscriptionDate?.ToString("yyyy/MM/dd");
+                }
+            </dd>
+            <dt class="col-sm-4">
+                A entendu parler de nous par
+            </dt>
+            <dd class="col-sm-8">
+                @if (Model.HeardOfUsFromName == null)
+                {
+                    @Html.DisplayName("Aucun");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.HeardOfUsFromName)
+                }
+            </dd>
+        </dl>
+        <hr />
+    </div>
+    <div class="btn-group mt-2">
+        <a class="btn btn-outline-primary" asp-action="Update" asp-route-id="@Model.Id">Modifier</a>
+        <a class="btn btn-outline-primary" asp-action="Index">Retourner à la liste</a>
+        @if (User.IsInRole("Administrateur"))
+        {
+            <a class="btn btn-outline-primary" asp-controller="CustomerDescription" asp-action="Detail" asp-route-id="@Model.Id">Voir la fiche détaillée</a>
+
+            <a class="btn btn-outline-danger" href="#" data-toggle="modal" data-target="#deleteModal">Supprimer</a>
+        }
+    </div>
+</div>
+
+@{
+    var deleteModalModel = new ParentEspoir.WebUI.Models.DeleteModalViewModel
+    {
+        ModalId = "deleteModal",
+        ControlerName = "Customer",
+        ModelId = (int)Model.Id
+    };
+}
+<partial name="../Shared/_DeleteModalPartial.cshtml" model="@deleteModalModel" />
+

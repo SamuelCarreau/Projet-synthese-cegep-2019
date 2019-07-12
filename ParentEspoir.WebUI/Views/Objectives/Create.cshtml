@@ -1,0 +1,86 @@
+﻿@model ParentEspoir.Application.CreateObjectiveCommand
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+@if (ViewBag.CreationSuccess != null && ViewBag.CreationSuccess)
+{
+    <div class="alert alert-success">
+        L'<strong>enregistrement</strong> de l'objectif a réussi!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+@if (ViewBag.CreationFailed != null && ViewBag.CreationFailed)
+{
+    <div class="alert alert-danger">
+        L'<strong>enregistrement</strong> de l'objectif a échoué!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<h1>Créer un objectif</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CustomerId" value="@ViewBag.CustomerId" />
+            <div class="form-row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">Code</label>
+                        <input asp-for="Code" type="text" class="form-control" />
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Nom de l'objectif</label>
+                        <input asp-for="Name" type="text" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Date de début</label>
+                        <input type="date" name="StartDate" class="form-control" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Nombre d'heures à accomplir</label>
+                        <input asp-for="NbHourDue" class="form-control" />
+                        <span asp-validation-for="NbHourDue" class="text-danger"></span>
+                    </div>
+                    <div id="WorkshopTypeApp" class="form-group">
+                        <label asp-for="WorkshopTypeId" class="control-label">Type de l'objectif</label>
+                        <select class="form-control" name="WorkshopTypeId">
+                            <option value="">Aucun</option>
+                            <option v-for="workshoptype in collection" v-bind:value="workshoptype.id">{{ workshoptype.name }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label class="control-label">Description</label>
+                        <textarea style="resize : none;" rows="15" asp-for="Description" class="form-control"> </textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="submit" value="Enregistrer" class="btn btn-block btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        <a asp-action="Index" asp-route-id="@ViewBag.CustomerId">Retour à la liste</a>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/Customer/Objectives/Objectives.js"></script>
+    <script src="~/js/clearform.js"></script>
+}

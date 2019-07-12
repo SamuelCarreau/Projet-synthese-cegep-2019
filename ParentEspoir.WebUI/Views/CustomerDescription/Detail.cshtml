@@ -1,0 +1,487 @@
+﻿@model ParentEspoir.Application.GetCustomerDescriptionModel
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] daysFrench = new string[] { "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi" };
+}
+
+<div class="jumbotron">
+    <h1>Suivi détaillé pour <span class="customerName"></span></h1>
+    <span hidden id="customerId">@Model.CustomerDescriptionId</span>
+    <hr />
+    <div>
+        <dl class="row">
+            <dt class="col-sm-4">
+                Numéro de dossier
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.FileNumber)
+            </dd>
+            <dt class="col-sm-4">
+                Sexe :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.Sex == null)
+                {
+                    @Html.DisplayName("Inconnu");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.Sex)
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Parent :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.Parent == null)
+                {
+                    @Html.DisplayName("Inconnu");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.Parent)
+                }
+            </dd>
+            <dt class="col-sm-4">
+                État civil :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.MaritalStatus == null)
+                {
+                    @Html.DisplayName("Inconnu");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.MaritalStatus)
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Type de famille :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.FamilyType == null)
+                {
+                    @Html.DisplayName("Inconnu");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.FamilyType)
+                }
+            </dd>
+            @{
+                if (Model.PregnancyExpectedDate == null)
+                {
+                    <dt class="col-sm-4">
+                        Grossesse :
+                    </dt>
+                    <dd class="col-sm-6">
+                        Non
+                    </dd>
+                }
+                else
+                {
+                    string pregnancyDueDate = ((DateTime)Model.PregnancyExpectedDate).ToString("dd-MM-yyyy");
+                    <dt class="col-sm-4">
+                        Grossesse :
+                    </dt>
+                    <dd class="col-sm-6">
+                        Oui
+                    </dd>
+                    <dt class="col-sm-4">
+                        Date prévue de l'accouchement :
+                    </dt>
+                    <dd class="col-sm-6">
+                        @pregnancyDueDate
+                    </dd>
+                }
+
+            }
+
+            <dt class="col-sm-4">
+                Nombre d'enfants :
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.ChildrenCount)
+            </dd>
+            @{
+                if (Model.CustomerChildrenAgeBracket.Count() > 0)
+                {
+                    <dt class="col-sm-4">
+                        Tranche d'âge d'enfants :
+                    </dt>
+                    @for (int i = 0; i < Model.CustomerChildrenAgeBracket.Count(); i++)
+                    {
+                        if (i != 0)
+                        {
+                            <dt class="col-sm-4"></dt>
+                        }
+                        <dd class="col-sm-6">
+                            @Model.CustomerChildrenAgeBracket.ElementAt(i)
+                        </dd>
+                    }
+                }
+            }
+
+            @{
+                if (Model.LegalCustody != null)
+                {
+                    <dt class="col-sm-4">
+                        Possède la garde légale :
+                    </dt>
+                    <dd class="col-sm-6">
+                        Non
+                    </dd>
+                    <dt class="col-sm-4">
+                        Type de garde :
+                    </dt>
+                    <dd class="col-sm-6">
+                        @if (Model.LegalCustody == null)
+                        {
+                            @Html.DisplayName("Inconnu");
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(model => model.LegalCustody)
+                        }
+
+                    </dd>
+                }
+                else
+                {
+                    <dt class="col-sm-4">
+                        Possède la garde légale :
+                    </dt>
+                    <dd class="col-sm-6">
+                        Oui
+                    </dd>
+                }
+            }
+
+            <dt class="col-sm-4">
+                Niveau de scolarité :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.Schooling == null)
+                {
+                    @Html.DisplayName("Inconnu");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.Schooling)
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Source de revenu :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.IncomeSource == null)
+                {
+                    @Html.DisplayName("Inconnu");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.IncomeSource)
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Revenu annuel :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.YearlyIncomeName == null)
+                {
+                    @Html.DisplayName("Inconnu");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.YearlyIncomeName)
+                }
+
+            </dd>
+            <dt class="col-sm-4">
+                Statut de citoyen :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.CitizenStatus == null)
+                {
+                    @Html.DisplayName("Inconnu");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.CitizenStatus)
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Logement :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.HomeType == null)
+                {
+                    @Html.DisplayName("Inconnu");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.HomeType)
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Moyen de transport :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.TransportType == null)
+                {
+                    @Html.DisplayName("Inconnu");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.TransportType)
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Langue parlé :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.LanguageSpoken == null)
+                {
+                    @Html.DisplayName("Inconnu");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.LanguageSpoken)
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Diagnostique de santé mental :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.HasMentalHealthDiagnostic)
+                {
+                    @Html.DisplayName("Oui");
+                }
+                else
+                {
+                    @Html.DisplayName("Non");
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Déjà hospitalisé en psychiatrie :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.HasBeenHospitalisedInPsychiatry)
+                {
+                    @Html.DisplayName("Oui");
+                }
+                else
+                {
+                    @Html.DisplayName("Non");
+                }
+            </dd>
+
+            @{
+                if (Model.CustomerSocialService == null)
+                {
+                    <dt class="col-sm-4">
+                        Aide des services sociaux :
+                    </dt>
+                    <dd class="col-sm-6">
+                        Non
+                    </dd>
+                }
+                else
+                {
+                    <dt class="col-sm-4">
+                        Aide des services sociaux :
+                    </dt>
+                    <dd class="col-sm-6">
+                        Oui
+                    </dd>
+                    @for (int i = 0; i < Model.CustomerSocialService.Count(); i++)
+                    {
+                        if (i == 0)
+                        {
+                            <dt class="col-sm-4">
+                                Types de services :
+                            </dt>
+                        }
+                        else
+                        {
+                            <dt class="col-sm-4">
+                            </dt>
+                        }
+                        <dd class="col-sm-6">
+                            @Model.CustomerSocialService.ElementAt(i)
+                        </dd>
+                    }
+                }
+            }
+
+            <dt class="col-sm-4">
+                En contact avec la DPJ présentement :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.HasContactWithDPJnow)
+                {
+                    @Html.DisplayName("Oui");
+                }
+                else
+                {
+                    @Html.DisplayName("Non");
+                }
+            </dd>
+            <dt class="col-sm-4">
+                En contact avec la DPJ par le passé :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.HasContactWithDPJinPast)
+                {
+                    @Html.DisplayName("Oui");
+                }
+                else
+                {
+                    @Html.DisplayName("Non");
+                }
+            </dd>
+
+            @{
+                if (Model.PersonnalFollowUpMeetingCount == null)
+                {
+                    <dt class="col-sm-4">
+                        Possède un suivi individuel :
+                    </dt>
+                    <dd class="col-sm-6">
+                        Non
+                    </dd>
+                }
+                else
+                {
+                    <dt class="col-sm-4">
+                        Possède un suivi individuel :
+                    </dt>
+                    <dd class="col-sm-6">
+                        Oui
+                    </dd>
+                    <dt class="col-sm-4">
+                        Combien de rencontre d'une heure :
+                    </dt>
+                    <dd class="col-sm-6">
+                        @Html.DisplayFor(model => model.PersonnalFollowUpMeetingCount)
+                    </dd>
+                }
+            }
+
+
+            <dt class="col-sm-4">
+                Participe à un groupe d'entraide :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.WillParticipateToHelpingGroup)
+                {
+                    @Html.DisplayName("Oui");
+                }
+                else
+                {
+                    @Html.DisplayName("Non");
+                }
+            </dd>
+
+            @{
+                if (Model.CustomerSkillToDevelop.Count() > 0)
+                {
+                    <dt class="col-sm-4">
+                        Compétences à développer :
+                    </dt>
+                    for (int i = 0; i < Model.CustomerSkillToDevelop.Count(); i++)
+                    {
+                        if (i > 0)
+                        {
+                            <dt class="col-sm-4"></dt>
+                        }
+                        <dd class="col-sm-6">
+                            @Model.CustomerSkillToDevelop.ElementAt(i)
+                        </dd>
+                    }
+                }
+            }
+
+            <dt class="col-sm-4">
+                Disponibilités :
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.Availability == null)
+                {
+                    @Html.DisplayName("Inconnu");
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.Availability)
+                }
+            </dd>
+
+            @{
+                if (Model.PreferedDays.Count() > 0)
+                {
+                    <dt class="col-sm-4">
+                        Journée(s) préférée(s):
+                    </dt>
+                    for (int i = 0; i < Model.PreferedDays.Count(); i++)
+                    {
+                        if (i > 0)
+                        {
+                            <dt class="col-sm-4"></dt>
+                        }
+                        <dd class="col-sm-6">
+                            @daysFrench[(int)Model.PreferedDays.ElementAt(i)]
+                        </dd>
+                    }
+                }
+            }
+
+            @{
+                if (Model.WantsToBecomeMember == null)
+                {
+                    <dt class="col-sm-4">
+                        Est membre :
+                    </dt>
+                    <dd class="col-sm-6">
+                        Oui
+                    </dd>
+                }
+                else
+                {
+                    <dt class="col-sm-4">
+                        Est membre :
+                    </dt>
+                    <dd class="col-sm-6">
+                        Non
+                    </dd>
+                    <dt class="col-sm-4">
+                        Désire devenir membre :
+                    </dt>
+                    @if ((bool)Model.WantsToBecomeMember)
+                    {
+                        <dd class="col-sm-6">
+                            Oui
+                        </dd>
+                    }
+                    else
+                    {
+                        <dd class="col-sm-6">
+                            Non
+                        </dd>
+                    }
+                }
+            }
+        </dl>
+        <hr />
+    </div>
+    
+    <div class="btn-group">
+        <a class="btn btn-primary" asp-action="Update" asp-route-id="@Model.CustomerDescriptionId">Modifier les informations</a>
+        <a class="btn btn-outline-primary"asp-controller="Customer" asp-action="Index">Retour à la liste</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/CustomerDescription/detailCustomerDescription.js"></script>
+}

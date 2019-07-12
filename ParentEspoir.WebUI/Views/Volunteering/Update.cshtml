@@ -1,0 +1,94 @@
+﻿@model ParentEspoir.Application.UpdateVolunteeringCommand
+
+@{
+    ViewData["Title"] = $"Modifier {Model.Title}";
+}
+
+@if (ViewBag.UpdateSuccess != null && ViewBag.UpdateSuccess)
+{
+<div class="alert alert-success">
+    Le bénévolat a bien été <strong>ajouté</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+}
+
+@if (ViewBag.UpdateFailed != null && ViewBag.UpdateFailed)
+{
+<div class="alert alert-danger">
+    Le bénévolat <strong>n'a pas pu être complété</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+}
+
+<div class="jumbotron">
+    <h4>Modifier le groupe de soutien</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Update" asp-route-id="@Model.CustomerId" asp-route-idVolunteering="@Model.VolunteeringId">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="VolunteeringId" />
+                <input type="hidden" asp-for="CustomerId" />
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label">Titre</label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Details" class="control-label">Détail</label>
+                    <input asp-for="Details" class="form-control" />
+                    <span asp-validation-for="Details" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Date</label>
+                    <input type="date" asp-for="Date" class="form-control" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Acknowledgment" class="control-label">Notes</label>
+                    <input asp-for="Acknowledgment" class="form-control" />
+                    <span asp-validation-for="Acknowledgment" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Amount" class="control-label">Montant ($)</label>
+                    <input asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HourCount" class="control-label">Nombre d'heure</label>
+                    <input asp-for="HourCount" class="form-control" />
+                    <span asp-validation-for="HourCount" class="text-danger"></span>
+                </div>
+                <div id="volunteeringTypeSelection" class="form-group">
+                    <label asp-for="VolunteeringTypeId" class="control-label">Type de bénévolat</label>
+                    <select asp-for="VolunteeringTypeId" class="form-control">
+                        <option value="">Aucun</option>
+                        @if (Model.VolunteeringTypeId != null)
+                        {
+                            <option v-for="volunteeringtype in collection" v-bind:value="volunteeringtype.id" :selected="volunteeringtype.id == @Model.VolunteeringTypeId">{{ volunteeringtype.name }}</option>
+                        }
+                        else
+                        {
+                            <option v-for="volunteeringtype in collection" v-bind:value="volunteeringtype.id">{{ volunteeringtype.name }}</option>
+                        }
+                    </select>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <input type="submit" value="Modifier" class="btn btn-primary" />
+                    <a class="btn btn-outline-primary" asp-action="Index" asp-route-id="@Model.CustomerId">Retour à la liste</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/Customer/Volunteering/VolunteeringType.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

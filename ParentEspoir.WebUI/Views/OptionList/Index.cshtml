@@ -1,0 +1,30 @@
+﻿<div class="jumbotron">
+
+    @{
+        ViewData["Title"] = "Options général";
+    }
+
+    <h2>@ViewData["Title"]</h2>
+
+
+
+    @if (User.IsInRole("Administrateur"))
+    {
+        <div>
+            <br />
+        </div>
+        <div>
+            <a class="btn btn-outline-primary mb-3" style="width: 33%; table-layout:fixed; border-collapse:collapse; " asp-area="" asp-controller="Users" asp-action="Index">Gérer les utilisateurs</a>
+        </div>
+        <div>
+            <a class="btn btn-outline-primary mb-3" style="width: 33%; table-layout:fixed; border-collapse:collapse; " asp-area="" asp-controller="ObjectiveCreate" asp-action="Index">Gérer les objectifs</a>
+        </div>
+        <div>
+            <a class="btn btn-outline-primary mb-3" style="width: 33%; table-layout:fixed; border-collapse:collapse; " asp-area="" asp-controller="ProfilOption" asp-action="Index">Options Système</a>
+        </div>
+
+
+
+    }
+
+

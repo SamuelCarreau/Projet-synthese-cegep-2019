@@ -1,0 +1,86 @@
+﻿@model CreateDocumentCommand
+
+@{
+    ViewData["Title"] = "Ajouter un document";
+}
+
+
+
+@if (ViewBag.CreationFailed != null && ViewBag.CreationFailed)
+{
+    <div class="alert alert-danger">
+        L'<strong>enregistrement</strong> du document a échoué
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+@if (ViewBag.CreationSuccess != null && ViewBag.CreationSuccess)
+{
+    <div class="alert alert-success">
+        L'<strong>enregistrement</strong> a réussi
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div class="jumbotron">
+    <h4>Ajouter un document</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form autocomplete="off" asp-action="Create" asp-route-id="@Model.CustomerId" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" value="@Model.CustomerId" name="CustomerId" />
+                <div class="form-group mb-2">
+                    <label class="control-label">Nom</label>
+                    <input asp-for="DocumentName" class="form-control" />
+                    <span asp-validation-for="DocumentName" class="text-danger"></span>
+                </div>
+
+                <label class="">Document</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="File">
+                    <label class="custom-file-label" data-browse="Parcourir" for="customFileLang">Choisir un fichier</label>
+                    <span asp-validation-for="File" class="text-danger"></span>
+                </div>
+                <div class="form-group my-2">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="4"> </textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="mb-2" id="documentTypeSelection">
+                    <label class="control-label">Type du document</label>
+                    <select class="form-control" name="@nameof(Model.DocumentTypeId)">
+                        <option value="">Aucun</option>
+                        <option v-for="type in collection" v-bind:value="type.id">{{type.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group mb-2">
+                    <input type="submit" value="Ajouter" class="btn btn-outline-primary btn-block" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div>
+        <a asp-action="Index" asp-route-id="@Model.CustomerId">Retour à la liste</a>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/Customer/Documents/Documents.js"></script>
+    <script src="~/js/clearform.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+    <script>
+        bsCustomFileInput.init()
+        var btn = document.getElementById('btnResetForm')
+        var form = document.querySelector('form')
+        btn.addEventListener('click', function () {
+            form.reset()
+        })
+    </script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

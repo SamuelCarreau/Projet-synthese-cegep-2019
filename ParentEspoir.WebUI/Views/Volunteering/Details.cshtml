@@ -1,0 +1,114 @@
+﻿    @model ParentEspoir.Application.GetVolunteeringModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+@if (ViewBag.DeleteFailed != null && ViewBag.DeleteFailed)
+{
+<div id="deleteFailed" class="alerte alert-danger">
+    La <strong>désactivation</strong> n'a pas fonctionné
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+}
+
+<div class="jumbotron">
+
+    <h4>Détail du bénévolat</h4>
+    <hr />
+    <dl class="row">
+
+        <dt class="col-sm-2">
+            Titre
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Title
+        </dd>
+        <dt class="col-sm-2">
+            Date
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Date?.ToString("dd-MM-yyyy")
+        </dd>
+
+        <dt class="col-sm-2">
+            Type de bénévolat
+        </dt>
+        @if (Model.VolunteeringTypeName == null)
+        {
+            <dd class="col-sm-10">
+                Aucun
+            </dd>
+        }
+        else
+        {
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.VolunteeringTypeName)
+            </dd>
+        }
+
+        <dt class="col-sm-2">
+            Nombre d'heure
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.HourCount)
+        </dd>
+        <dt class="col-sm-2">
+            Montant ($)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+        <dt class="col-sm-2">
+            Détails
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Details)
+        </dd>
+        <dt class="col-sm-2">
+            Reconnaissance
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Acknowledgment)
+        </dd>
+    </dl>
+
+    <div >
+        <a class="btn btn-outline-primary" asp-action="Update" asp-route-id="@Model.CustomerId" asp-route-idVolunteering="@Model.VolunteeringId">Modifier</a> 
+        @if (User.IsInRole("Administrateur"))
+        {
+            <a class="btn btn-outline-danger" href="#" data-toggle="modal" data-target="#deleteModal">Supprimer</a>
+        }
+        <a class="btn btn-outline-primary" asp-action="Index" asp-route-id="@Model.CustomerId">Retour à la liste</a>
+    </div>
+</div>
+<!--DeleteModal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="alertdialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="alert">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmation de la suppression</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Etes-vous sûr de vouloir supprimer cet élément ?
+            </div>
+            <div class="modal-footer">
+                <form asp-action="Delete" asp-route-id="@Model.CustomerId">
+                    <input hidden name="idVolunteering" value="@Model.VolunteeringId" />
+                    <button class="btn btn-danger" type="submit">Supprimer</button>
+                </form>
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/Customer/Volunteering/Volunteering.js"></script>
+}

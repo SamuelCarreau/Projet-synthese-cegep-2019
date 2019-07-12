@@ -1,0 +1,17 @@
+﻿#appProfilOption {
+    position: relative;
+}
+
+.loading {
+    position: fixed;
+    display: inline-block;
+    z-index: 9999;
+    text-align: center;
+    font-size: 32px;
+    padding-top: 20vh;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}

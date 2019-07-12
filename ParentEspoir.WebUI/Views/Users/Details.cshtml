@@ -1,0 +1,71 @@
+﻿@model AppUser
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+@if (ViewBag.ErrorDeleteing != null && ViewBag.ErrorDeleteing)
+{
+<div class="alert alert-danger">
+    La <strong>désactivation</strong> a échoué
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+}
+
+<div class="jumbotron">
+    <h4>Information sur l'utilisateur</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Nom d'utilisateur
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+        <dt class="col-sm-2">
+            Courriel
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+    </dl>
+    <div class="btn-group">
+        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id">Modifier</a>
+        <a class="btn btn-outline-primary" asp-action="Index">Retour à la iste</a>
+        <a class="btn btn-outline-danger" href="#" data-toggle="modal" data-target="#deleteModal">Supprimer</a>
+    </div>
+</div>
+
+
+<!--DeleteModal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="alertdialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="alert">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmation de la suppression</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Etes-vous sûr de vouloir supprimer cet élément ?
+            </div>
+            <div class="modal-footer">
+                <form asp-action="Delete">
+                    <input hidden name="id" value="@Model.Id" />
+                    <button class="btn btn-danger" type="submit">Supprimer</button>
+                </form>
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+
+    </div>
+</div>

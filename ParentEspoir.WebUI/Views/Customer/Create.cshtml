@@ -1,0 +1,152 @@
+﻿@model ParentEspoir.Application.CreateCustomerCommand
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+@if (ViewBag.CreationSucced != null && ViewBag.CreationSucced)
+{
+    <div class="alert alert-success">
+        <strong>L'ajout</strong> a réussi !
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+    <div class="jumbotron">
+        <h4>Ajouter un client</h4>
+        <hr />
+        <div class="row">
+            <div class="col">
+                <form id="myform" autocomplete="off" asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3 form-group">
+                            <label asp-for="@Model.Model.FirstName" class="control-label">Prénom*</label>
+                            <input asp-for="@Model.Model.FirstName" class="form-control" />
+                            <span asp-validation-for="@Model.Model.FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3 form-group">
+                            <label>Nom*</label>
+                            <input asp-for="Model.LastName" class="form-control" />
+                            <span asp-validation-for="Model.LastName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3 form-group">
+                            <label>Date de naissance*</label>
+                            <input type="date" asp-for="Model.DateOfBirth" class="form-control" />
+                            <span asp-validation-for="Model.DateOfBirth" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3 form-group">
+                            <label>Adresse*</label>
+                            <input asp-for="Model.Address" class="form-control" />
+                            <span asp-validation-for="Model.Address" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3 mb-3 form-group">
+                            <label>Ville*</label>
+                            <input asp-for="Model.CityName" class="form-control" />
+                            <span asp-validation-for="Model.CityName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 mb-3 form-group">
+                            <label>Code postal*</label>
+                            <input asp-for="Model.PostalCodeName" class="form-control" />
+                            <span asp-validation-for="Model.PostalCodeName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 mb-3 form-group">
+                            <label>Province*</label>
+                            <input asp-for="Model.ProvinceName" class="form-control" />
+                            <span asp-validation-for="Model.ProvinceName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label>Pays*</label>
+                            <input asp-for="Model.CountryName" class="form-control" />
+                            <span asp-validation-for="Model.CountryName" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <label>Téléphone*</label>
+                            <input type="tel" asp-for="Model.Phone" class="form-control" />
+                            <span asp-validation-for="Model.Phone" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label>Téléphone d'urgence*</label>
+                            <input type="tel" asp-for="Model.SecondaryPhone" class="form-control" />
+                            <span asp-validation-for="Model.SecondaryPhone" class="text-danger"></span>
+                        </div>
+                        <div id="SupportGroupOption" class="col-md-4 mb-3">
+                            <label>Groupe de soutien</label>
+                            <select class="form-control" asp-for="Model.SupportGroupId">
+                                <option value="">Aucun</option>
+                                @if (Model?.Model.SupportGroupId != null)
+                                {
+                                    <option v-for="item in collection" v-bind:value="item.supportGroupId" :selected="item.supportGroupId == @Model.Model.SupportGroupId">{{ item.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="item in collection" v-bind:value="item.supportGroupId">{{ item.name }}</option>
+                                }
+
+                            </select>
+                            <span asp-validation-for="Model.SupportGroupId" class="text-danger"></span>
+                        </div>
+                        <div id="ReferenceTypeOption" class="col-md-4 mb-3">
+                            <label>Référé par</label>
+                            <select class="form-control" asp-for="Model.ReferenceById">
+                                <option value="">Aucun</option>
+                                @if (Model?.Model.ReferenceById != null)
+                                {
+                                    <option v-for="item in collection" v-bind:value="item.id" :selected="item.id == @Model.Model.ReferenceById">{{ item.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="item in collection" v-bind:value="item.id">{{ item.name }}</option>
+                                }
+
+
+                            </select>
+                            <span asp-validation-for="Model.ReferenceById" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3 form-group">
+                            <label>Date d'inscription au programme du ministère</label>
+                            <input type="date" asp-for="Model.InscriptionDate" class="form-control" />
+                            <span asp-validation-for="Model.InscriptionDate" class="text-danger"></span>
+                        </div>
+
+                        <div id="HeardOfUsFromOption" class="col-md-4 mb-3">
+                            <label>A entendu parler de nous par :</label>
+                            <select class="form-control" asp-for="Model.HeardOfUsFromId">
+                                <option value="">Aucun</option>
+                                @if (Model?.Model.HeardOfUsFromId != null)
+                                {
+                                    <option v-for="item in collection" v-bind:value="item.id" :selected="item.id == @Model.Model.HeardOfUsFromId">{{ item.name }}</option>
+                                }
+                                else
+                                {
+                                    <option v-for="item in collection" v-bind:value="item.id">{{ item.name }}</option>
+                                }
+
+                            </select>
+                            <span asp-validation-for="Model.HeardOfUsFromId" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Enregistrer" class="btn btn-primary" />
+                        <a class="btn btn-outline-primary" asp-action="Index">Retour à la liste</a>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div>
+        </div>
+    </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/Customer/DropdownListCustomer.js"></script>
+    <script src="~/js/clearform.js"></script>
+}

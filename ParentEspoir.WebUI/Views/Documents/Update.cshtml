@@ -1,0 +1,74 @@
+﻿@model ParentEspoir.Application.UpdateDocumentCommand
+
+@{
+    ViewData["Title"] = "Modifier un document";
+}
+
+@if (ViewBag.UpdateFailed != null && ViewBag.UpdateFailed)
+{
+<div class="alert alert-danger">
+    La <strong>modification</strong> n'a pas fonctionné !
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+}
+
+
+<div class="jumbotron">
+    <h4>Modifier un document</h4>
+
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Update" asp-route-id="@Model.CustomerId" asp-route-idDocument="@Model.DocumentId" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" value="@Model.CustomerId" name="CustomerId" />
+                <input type="hidden" value="@Model.DocumentId" name="DocumentId" />
+                <div class="form-group mb-2">
+                    <label class="control-label">Nom</label>
+                    <input asp-for="DocumentName" class="form-control" />
+                    <span asp-validation-for="DocumentName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group my-2">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+
+
+                <div class="form-group my-2" id="documentTypeSelection">
+                    @{
+                        var id = Model.DocumentTypeId?.ToString() ?? "''";
+                    }
+                    <label asp-for="DocumentTypeId" class="control-label">Type du document</label>
+                    <select asp-for="DocumentTypeId" class="form-control">
+                        <option value="">Aucun</option>
+                        @if (Model.DocumentTypeId != null)
+                        {
+                            <option v-for="type in collection" :selected="type.id == @id" v-bind:value="type.id">{{ type.name }}</option>
+                        }
+                        else
+                        {
+                            <option v-for="type in collection" v-bind:value="type.id">{{ type.name }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group mb-2">
+                    <input type="submit" value="Modifier" class="btn btn-outline-primary btn-block" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div>
+        <a asp-action="Index" asp-route-id="@Model.CustomerId">Retour à la liste</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Customer/Documents/Documents.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

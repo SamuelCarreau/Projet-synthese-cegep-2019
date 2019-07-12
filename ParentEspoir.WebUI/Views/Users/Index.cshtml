@@ -1,0 +1,59 @@
+﻿@model IEnumerable<AppUser>
+
+@{
+    ViewData["Title"] = "Utilisateurs";
+}
+
+<div class="jumbotron">
+
+<h1>Gestion des utilisateurs</h1>
+
+@if (ViewBag.OperationSuccess != null && ViewBag.OperationSuccess)
+{
+<div class="alert alert-success">
+    Les <strong>modifications</strong> ont été appliqués
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+}
+
+<p>
+    <a class="btn btn-outline-primary" asp-action="Create">Ajouter un utilisateur</a>
+</p>
+
+@if (Model.Count() == 0)
+{
+    <p>
+        Il n'y a aucun utilisateur à afficher
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom d'utilisateur</th>
+                <th>Nom</th>
+                <th>Courriel</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@user.Name</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@user.Id">Consuler</a> | 
+                        <a asp-action="Edit" asp-route-id="@user.Id">Modifier</a> | 
+                        <a asp-action="UserRoles" asp-route-id="@user.Id">Roles</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+</div>
